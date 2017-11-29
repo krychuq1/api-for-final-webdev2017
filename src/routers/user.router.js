@@ -15,6 +15,10 @@ import bcrypt from 'bcrypt'
  *              type: string
  *          lastName:
  *              type: string
+ *          password:
+ *              type: string
+ *          email:
+ *              type: email
  *
  */
 
