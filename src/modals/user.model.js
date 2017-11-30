@@ -6,9 +6,7 @@ class UserModel{
     constructor(){
         this.sequalize = db.getSequalize();
         this.defineModel();
-        // this.user.findAll().then(users => {
-        //     console.log(users[0].dataValues)
-        // });
+        this.userModel.findAll();
     }
     defineModel(){
         //define user model
@@ -19,13 +17,13 @@ class UserModel{
             lastName: {
                 type: Sequalize.STRING
             },
-            password: {
+            /*password: {
                 type: Sequalize.STRING
             },
             email: {
                 type: Sequalize.STRING,
                 unique: true
-            }
+            }*/
         });
     }
     getModel(){
