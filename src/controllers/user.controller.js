@@ -6,13 +6,13 @@ class UserController{
         this.userModel = userModel.getModel();
     }
 
-    getAll(){
+    getUsers(){
         return this.userModel.all();
     }
 
-    getUser(){
+    getUser(user){
         return new Promise((resolve, reject)=>{
-            this.userModel.findOne({ 'email': user.email }).then((userDb)=>{
+            this.userModel.findOne({ where : {'email': user.email }}).then((userDb)=>{
                 if(userDb){
                     this.comparePassword(user.password, userDb.password).then((res)=>{
                         if(res){
@@ -30,8 +30,8 @@ class UserController{
     }
 
     addUser(user){
-        return this.hashPassword(user.password).then((hashed)=>{
-            user.password = hashed;
+       return this.hashPassword(user.password).then((hashed)=>{
+           user.password = hashed;
             let userObj = new this.userModel(user);
             return userObj.save();
         });

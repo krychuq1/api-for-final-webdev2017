@@ -17,13 +17,16 @@ class UserModel{
             lastName: {
                 type: Sequalize.STRING
             },
-            /*password: {
+            password: {
                 type: Sequalize.STRING
             },
             email: {
                 type: Sequalize.STRING,
                 unique: true
-            }*/
+            },
+            isAdmin: {
+                type: Sequalize.BOOLEAN
+            }
         });
     }
     getModel(){
