@@ -3,12 +3,12 @@ import bcrypt from 'bcrypt';
 class UserController{
 
     constructor(){
-        // this.userModel = userModel.getModel();
+        this.userModel = userModel.getModel();
     }
 
-    // getAll(){
-    //     return this.userModel.find();
-    // }
+    getAll(){
+        return this.userModel.find();
+    }
     //
     // addUser(user){
     //     return this.hashPassword(user.password).then((hashed)=>{
