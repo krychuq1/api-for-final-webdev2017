@@ -86,13 +86,13 @@ userRouter.get('/authenticate/:email/:password', (req, res) => {
         email: req.params.email,
         password: req.params.password
     };
-    userController.getUser(user).then(user => {
+    userController.authenticate(user).then(user => {
 
         const payload = {
-            admin: user.isAdmin
+            admin: user.isAdmin,
+            email: user.email
         };
         let token = jwt.sign(payload, 'superDuperSecretKey',  { expiresIn: '1h' });
-        console.log(token);
         res.json({
             token : token
         });
@@ -136,7 +136,7 @@ userRouter.post('/user', (req, res)=>{
 
 /**
  * @swagger
- * /users/user/{email}/{password}:
+ * /users/user/{email}/:
  *  get:
  *     tags:
  *      - user
@@ -144,63 +144,101 @@ userRouter.post('/user', (req, res)=>{
  *     description: get a particular matching users
  *     consumes: application/json
  *     parameters:
- *      - in: path
- *        name: email
+ *      - in: header
+ *        name: x-access-token
  *        schema:
  *          type: string
  *      - in: path
- *        name: password
+ *        name: email
  *        schema:
  *          type: string
  *     responses:
  *          201:
  *              description: ok
  */
-userRouter.get('/user/:email/:password', (req, res)=>{
+userRouter.get('/user/:email/',validateToken, (req, res)=>{
     let obj = {
         email: req.params.email,
-        password: req.params.password
     };
     userController.getUser(obj).then((user)=>{
-        res.send(user);
+        if(req.decoded.email === obj.email || req.decoded.admin){
+            res.send(user);
+        }else{
+            res.status(401);
+            res.send('You are not authorized')
+        }
     }).catch(()=>{
         res.status(404);
         res.send('not found')
     })
-
 });
 
 /**
  * @swagger
- * /users/user/{email}/{password}:
+ * /users/user/{email}/:
  *  delete:
  *      tags:
- *      - content
- *      summary: delete specific content
- *      description: delete specific content
+ *      - user
+ *      summary: delete user
+ *      description: delete user
  *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        schema:
+ *          type: string
  *      - in: path
  *        name: email
  *        schema:
- *           type: string
- *      - in: path
- *        name:
- *        schema:
- *          type: string
- *      - in: path
- *        name: name
- *        schema:
- *          type: string
- *      - in: path
- *        name: language
- *        schema:
- *          type: string
  *      responses:
  *          201:
  *              description: ok
- *
  */
+userRouter.delete('/user/:email/', validateToken, (req, res)=>{
+    let email =  req.params.email;
+    if(req.decoded.admin || req.decoded.email === email){
+        userController.deleteUser(email).then(response => {
+            res.send(response)
+        })
+    }else{
+        res.status(401);
+        res.send('You are not authorized');
+    }
+});
 
-
+/**
+ * @swagger
+ * /users/user/{email}/:
+ *  put:
+ *      tags:
+ *      - user
+ *      summary: update user
+ *      description: update user
+ *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: email
+ *        schema:
+ *      - in: body
+ *        name: user
+ *        schema:
+ *           $ref: '#/definitions/User'
+ *      responses:
+ *          201:
+ *              description: ok
+ */
+userRouter.put('/user/:email/', validateToken, (req, res)=>{
+    let email =  req.params.email;
+    if(req.decoded.admin || req.decoded.email === email){
+        userController.updateUser(email, req.body).then(response => {
+            res.send(response)
+        })
+    }else{
+        res.status(401);
+        res.send('You are not authorized');
+    }
+});
 
 export default userRouter;
