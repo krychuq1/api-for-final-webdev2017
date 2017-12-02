@@ -35,9 +35,9 @@ class EventController{
 
        //need to see how the freaking fuck this return and actual response here instead of the 0 or 1 which is for number of affected rows!
        if (updateStatus!=0){
-           console.log('worked');
+           //console.log('worked');
        }else{
-           console.log('fuck! No rows affected!');
+        //   console.log('fuck! No rows affecte d!');
        }
     }
 
