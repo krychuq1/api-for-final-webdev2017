@@ -1,6 +1,7 @@
 import express from 'express';
 import userController from '../controllers/user.controller';
 import jwt from 'jsonwebtoken';
+import  {validateToken}  from './middleware';
 /**
  * @swagger
  * definitions:
@@ -25,6 +26,9 @@ import jwt from 'jsonwebtoken';
 
 let userRouter = express.Router();
 
+// userRouter.use((req, res, next)=>{
+//     validateToken(req, res, next);
+// });
 /**
  * @swagger
  * /users/user:
@@ -32,18 +36,51 @@ let userRouter = express.Router();
  *      tags:
  *      - user
  *      summary: get all users
+ *      parameters:
+ *          - in: header
+ *            name: x-access-token
+ *            schema:
+ *              type: string
+ *            required: true
  *      description: get all users
  *      responses:
  *          201:
  *              description: ok
  *
  */
-userRouter.get('/user', (req, res) =>{
-   userController.getUsers().then(users =>{
-       res.send(users);
-   })
+userRouter.get('/user', validateToken, (req, res) =>{
+    if(req.decoded.admin){
+        userController.getUsers().then(users =>{
+            res.send(users);
+        })
+    }else{
+        res.status(401);
+        res.send('you are not an admin');
+    }
+
 });
 
+/**
+ * @swagger
+ * /users/authenticate/{email}/{password}:
+ *  get:
+ *      tags:
+ *      - user
+ *      summary: get token
+ *      parameters:
+ *      - in: path
+ *        name: email
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: password
+ *        schema:
+ *          type: string
+ *      responses:
+ *          201:
+ *              description: ok
+ *
+ */
 userRouter.get('/authenticate/:email/:password', (req, res) => {
     let user = {
         email: req.params.email,
@@ -54,17 +91,16 @@ userRouter.get('/authenticate/:email/:password', (req, res) => {
         const payload = {
             admin: user.isAdmin
         };
-        console.log(payload);
         let token = jwt.sign(payload, 'superDuperSecretKey',  { expiresIn: '1h' });
         console.log(token);
-        res.send('ok');
+        res.json({
+            token : token
+        });
     }).catch((err)=>{
         console.log(err);
         res.status(404);
         res.send('not found')
     });
-
-   console.log("it is going to authenticate ", user);
 });
 
 
