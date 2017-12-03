@@ -11,14 +11,32 @@ class EventModel{
     defineModel(){
         //define event model
         this.eventModel = this.sequalize.define('event', {
-            name: {
-                type: Sequalize.STRING,
-            },
-            description: {
+            title: {
                 type: Sequalize.STRING,
             },
             address: {
                 type: Sequalize.STRING,
+            },
+            city: {
+                type: Sequalize.STRING,
+            },
+            online_event: {
+                type: Sequalize.BOOLEAN,
+            },
+            start_date: {
+                type: Sequalize.DATE,
+            },
+            end_date: {
+                type: Sequalize.DATE,
+            },
+            image: {
+                type: Sequalize.STRING,
+            },
+            description: {
+                type: Sequalize.TEXT
+            },
+            organizer_name: {
+                type: Sequalize.STRING
             },
             number_of_places: {
                 type: Sequalize.DataTypes.INTEGER
