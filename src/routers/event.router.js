@@ -1,5 +1,6 @@
 import express from 'express';
 import eventController from "../controllers/events.controller";
+import  {validateToken}  from './middleware';
 
 /**
  * @swagger
@@ -7,19 +8,44 @@ import eventController from "../controllers/events.controller";
  *  Event:
  *      type: object
  *      required:
- *      - name
- *      - description
+ *      - title
  *      - address
- *      - number of places
+ *      - city
+ *      - online_event
+ *      - start_date
+ *      - start_time
+ *      - end_date
+ *      - end_time
+ *      - image
+ *      - description
+ *      - organizer_name
+ *      - number_of_places
  *      properties:
- *          name:
- *              type: string
- *          description:
+ *          title:
  *              type: string
  *          address:
  *              type: string
+ *          city:
+ *              type: string
+ *          online_event:
+ *              type: boolean
+ *          start_date:
+ *              type: date
+ *          start_time:
+ *              type: string
+ *          end_date:
+ *              type: date
+ *          end_time:
+ *              type: string
+ *          image:
+ *              type: string
+ *          description:
+ *              type: string
+ *          organizer_name:
+ *              type: string
  *          number_of_places:
  *              type: integer
+ *
  */
 
 let eventRouter = express.Router();
@@ -58,8 +84,8 @@ eventRouter.post('/event', (req, res)=>{
  *  get:
  *      tags:
  *      - event
- *      summary: get events
- *      description: get all events
+ *      summary: get all events
+ *      description: get all existing events
  *      responses:
  *          200:
  *              description: ok
@@ -72,7 +98,7 @@ eventRouter.get('/event', (req,res)=>{
         res.status(404);
         res.send('not found')
     })
-   //res.send('ok');
+    //res.send('ok');
 });
 
 /**
@@ -81,11 +107,17 @@ eventRouter.get('/event', (req,res)=>{
  *  get:
  *      tags:
  *      - event
- *      summary: get event
+ *      summary: get one event
  *      description: get one event based on its id
+ *      parameters:
+ *      - in: path
+ *        name: eventId
+ *        schema:
+ *          type: number
  *      responses:
  *          200:
  *              description: ok
+ *
  */
 eventRouter.get('/event/:eventId', (req, res)=>{
     eventController.getEvent(req).then((event)=>{
@@ -97,10 +129,63 @@ eventRouter.get('/event/:eventId', (req, res)=>{
 });
 
 /**
- * Don't know how to make the swagger for update event!? :(
+ * @swagger
+ * /events/event/{eventId}:
+ *  put:
+ *      tags:
+ *      - event
+ *      summary: edit one event
+ *      description: edit/update one event based on its id
+ *      parameters:
+ *      - in: path
+ *        name: eventId
+ *      - in: body
+ *        name: body
+ *        schema:
+ *          type: number
+ *      responses:
+ *          200:
+ *              description: ok
+ *
  */
 eventRouter.put('/event/:eventId', (req,res)=>{
-    eventController.updateEvent(req);
+    eventController.updateEvent(req).then(response => {
+        res.send(response);
+    }).catch(()=>{
+        res.status(404);
+        res.send('no event to update');
+    });
 });
+
+
+/**
+ * @swagger
+ * /events/event/{eventId}:
+ *  delete:
+ *      tags:
+ *      - event
+ *      summary: delete one event
+ *      description: delete event
+ *      parameters:
+ *      - in: path
+ *        name: eventId
+ *        schema:
+ *          type: number
+ *      responses:
+ *          200:
+ *              description: ok
+ */
+eventRouter.delete('/event/:eventId/', (req, res)=>{
+
+    eventController.deleteEvent(req).then(response => {
+        res.send(response)
+    }).catch(()=>{
+        res.status(404);
+        res.send('cannot delete event');
+    });
+
+});
+
+
 
 export default eventRouter;

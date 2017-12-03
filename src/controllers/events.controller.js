@@ -1,5 +1,4 @@
 import eventModel from '../modals/event.model'
-import bcrypt from 'bcrypt';
 class EventController{
 
     constructor(){
@@ -24,21 +23,26 @@ class EventController{
     }
 
     updateEvent(obj){
-       let updateStatus = this.eventModel.update({
-            name:obj.body.name,
-            description:obj.body.description,
-            address:obj.body.address,
-            number_of_places:obj.body.number_of_places
-        },{where:
-            {id:obj.params.eventId}
-        });
+        return this.eventModel.findById(obj.params.eventId).then(event => {
+            return event.update({
+                title:obj.body.title,
+                address:obj.body.address,
+                city:obj.body.city,
+                online_event:obj.body.online_event,
+                start_date:obj.body.start_date,
+                end_date:obj.body.end_date,
+                image:obj.body.image,
+                description:obj.body.description,
+                organizer_name:obj.body.organizer_name,
+                number_of_places:obj.body.number_of_places
+            }).then(() => {});
+        })
+    }
 
-       //need to see how the freaking fuck this return and actual response here instead of the 0 or 1 which is for number of affected rows!
-       if (updateStatus!=0){
-           //console.log('worked');
-       }else{
-        //   console.log('fuck! No rows affecte d!');
-       }
+    deleteEvent(obj){
+        return this.eventModel.findById(obj.params.eventId).then(event => {
+            return event.destroy();
+        })
     }
 
 }
