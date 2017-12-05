@@ -102,8 +102,34 @@ userRouter.get('/authenticate/:email/:password', (req, res) => {
         res.send('not found')
     });
 });
-
-
+/**
+ * @swagger
+ * /users/checkEmail/{email}/:
+ *  get:
+ *      tags:
+ *      - user
+ *      summary: check if user is register
+ *      parameters:
+ *      - in: path
+ *        name: email
+ *        schema:
+ *          type: string
+ *      responses:
+ *          201:
+ *              description: ok
+ *
+ */
+userRouter.get('/checkEmail/:email', (req, res) => {
+   userController.checkEmail(req.params.email).then(response => {
+       if(response){
+           res.status(200);
+           res.send("SUCCESS");
+       }else{
+           res.status(404);
+           res.send('not found')
+       }
+   })
+});
 
 /**
  * @swagger

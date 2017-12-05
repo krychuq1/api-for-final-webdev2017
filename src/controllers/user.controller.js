@@ -57,7 +57,9 @@ class UserController{
            return user.update(newUser).then(() => {});
         })
     }
-
+    checkEmail(email){
+        return this.findOne(email);
+    }
 
     hashPassword(password){
         return bcrypt.hash(password, 5);
