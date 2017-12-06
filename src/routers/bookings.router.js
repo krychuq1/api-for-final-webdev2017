@@ -1,10 +1,10 @@
 import express from 'express';
 import bookingController from "../controllers/booking.controller";
 import  {validateToken}  from './middleware';
-
 /**
  * @swagger
  * definitions:
+ *
  *  BookEvent:
  *      type: object
  *      required:
@@ -16,6 +16,13 @@ import  {validateToken}  from './middleware';
  *              type: integer
  *          eventId:
  *              type: integer
+ *          transactionStatus:
+ *              type: string
+ *  BookingStatusUpdate:
+ *      type: object
+ *      required:
+ *      - transactionStatus
+ *      properties:
  *          transactionStatus:
  *              type: string
  *
@@ -58,7 +65,7 @@ bookingRouter.post('/:eventId/:userId',validateToken, (req,res)=>{
 
 /**
  * @swagger
- * /bookings/{userId}:
+ * /bookings/events/{userId}:
  *  get:
  *      tags:
  *      - booking
@@ -76,10 +83,9 @@ bookingRouter.post('/:eventId/:userId',validateToken, (req,res)=>{
  *      responses:
  *          200:
  *              description: ok
- *
  */
-bookingRouter.get('/:userId/',validateToken, (req,res)=>{
-    bookingController.getAllBookingsByEvents(req).then(response => {
+bookingRouter.get('/events/:userId/',validateToken, (req,res)=>{
+    bookingController.getAllBookingsByUserId(req).then(response => {
         res.send(response);
     }).catch(()=>{
         res.status(404);
@@ -90,12 +96,12 @@ bookingRouter.get('/:userId/',validateToken, (req,res)=>{
 
 /**
  * @swagger
- * /bookings/{eventId}:
+ * /bookings/users/{eventId}:
  *  get:
  *      tags:
  *      - booking
  *      summary: get all users by eventId
- *      description: get all users that booked a particular event --> accessible only for user
+ *      description: get all users that booked a particular event --> accessible only for admin
  *      parameters:
  *      - in: header
  *        name: x-access-token
@@ -104,20 +110,99 @@ bookingRouter.get('/:userId/',validateToken, (req,res)=>{
  *        name: eventId
  *        required: true
  *        schema:
- *          $ref: '#/definitions/Booking_detail#1'
+ *          $ref: '#/definitions/BookEvent'
  *      responses:
  *          200:
  *              description: ok
  *
  */
-bookingRouter.get('/:eventId/',validateToken, (req,res)=>{
-    bookingController.getAllBookingsByEvent(req).then(response => {
-        res.send(response);
-    }).catch(()=>{
-        res.status(404);
-        res.send('no event to update');
-    });
+bookingRouter.get('/users/:eventId',validateToken, (req,res)=>{
+    if(req.decoded.admin) {
+        bookingController.getAllBookingsByEventId(req.params.eventId).then(response => {
+            res.send(response);
+        }).catch(() => {
+            res.status(404);
+            res.send('no event to update');
+        });
+    }else{
+        res.status(401);
+        res.send('You are not authorized as admin');
+    }
 });
 
+/**
+ * @swagger
+ * /bookings/{bookingId}:
+ *  put:
+ *      tags:
+ *      - booking
+ *      summary: edit a particular booking
+ *      description: As admin, edit/update the transaction status of a particular booking
+ *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        required: true
+ *      - in: path
+ *        name: bookingId
+ *        required: true
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/BookingStatusUpdate'
+ *      responses:
+ *          200:
+ *              description: ok
+ *
+ */
+bookingRouter.put('/:bookingId',validateToken, (req,res)=>{
+    if(req.decoded.admin){
+        bookingController.updateBookingStatus(req).then(response => {
+            res.send(response);
+        }).catch(()=>{
+            res.status(404);
+            res.send('no event to update');
+        });
+    }else{
+        res.status(401);
+        res.send('You are not authorized as admin');
+    }
+});
+
+
+/**
+ * @swagger
+ * /bookings/booking/{eventId}:
+ *  delete:
+ *      tags:
+ *      - booking
+ *      summary: delete all bookings
+ *      description: As admin, delete all bookings based on event id
+ *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        required: true
+ *      - in: path
+ *        name: eventId
+ *        required: true
+ *        schema:
+ *          type: number
+ *      responses:
+ *          200:
+ *              description: ok
+ */
+bookingRouter.delete('/booking/:eventId',validateToken,(req,res)=>{
+   if(req.decoded.admin){
+       bookingController.deleteAllBookingsOfAnEvent(req.params.eventId).then(response => {
+          res.send(response);
+       }).catch(()=>{
+           res.status(404);
+           res.send('no matching event found');
+       });
+   }else{
+        res.status(401);
+        res.send('You are not authorised as admin');
+   }
+});
 
 export default bookingRouter;

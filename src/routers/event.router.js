@@ -222,6 +222,4 @@ eventRouter.delete('/event/:eventId/', (req, res)=>{
 
 });
 
-
-
 export default eventRouter;
