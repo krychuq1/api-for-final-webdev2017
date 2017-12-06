@@ -45,7 +45,6 @@ import  {validateToken}  from './middleware';
  *              type: string
  *          number_of_places:
  *              type: integer
- *
  */
 
 let eventRouter = express.Router();
@@ -55,11 +54,16 @@ let eventRouter = express.Router();
  *  post:
  *      tags:
  *      - event
- *      summary: add event
- *      description: add a new event
+ *      summary: As admin, add a new event to the database
+ *      description: 1. First generate token using the user api token generator.
+ *                   2. Admin, use token and json body to add a new event to the database.
  *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        required: true
  *      - in: body
- *        name: event
+ *        name: string
+ *        required: true
  *        schema:
  *           $ref: '#/definitions/Event'
  *      responses:
@@ -67,14 +71,20 @@ let eventRouter = express.Router();
  *              description: ok
  *
  */
-eventRouter.post('/event', (req, res)=>{
-    eventController.add(req.body).then((response)=>{
-        res.status(201);
-        res.send(response);
-    }).catch((err)=>{
-        res.status(409);
-        res.send(err);
-    });
+eventRouter.post('/event',validateToken, (req, res)=>{
+    if(req.decoded.admin) {
+        console.log ('re decoded admin returns: '+req.decoded.admin);
+        eventController.add(req.body).then((response) => {
+            res.status(201);
+            res.send(response);
+        }).catch((err) => {
+            res.status(409);
+            res.send(err);
+        });
+    }else{
+        res.status(401);
+        res.send('You are not authorized as admin');
+    }
 });
 
 
@@ -86,12 +96,16 @@ eventRouter.post('/event', (req, res)=>{
  *      - event
  *      summary: get all events
  *      description: get all existing events
+ *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        required: true
  *      responses:
- *          200:
+ *          201:
  *              description: ok
  */
 
-eventRouter.get('/event', (req,res)=>{
+eventRouter.get('/event',validateToken, (req,res)=>{
     eventController.getAll().then((event)=>{
         res.send(event);
     }).catch(()=>{
@@ -110,8 +124,12 @@ eventRouter.get('/event', (req,res)=>{
  *      summary: get one event
  *      description: get one event based on its id
  *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        required: true
  *      - in: path
  *        name: eventId
+ *        required: true
  *        schema:
  *          type: number
  *      responses:
@@ -119,7 +137,7 @@ eventRouter.get('/event', (req,res)=>{
  *              description: ok
  *
  */
-eventRouter.get('/event/:eventId', (req, res)=>{
+eventRouter.get('/event/:eventId',validateToken, (req, res)=>{
     eventController.getEvent(req).then((event)=>{
         res.send(event);
     }).catch(()=>{
@@ -137,10 +155,15 @@ eventRouter.get('/event/:eventId', (req, res)=>{
  *      summary: edit one event
  *      description: edit/update one event based on its id
  *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        required: true
  *      - in: path
  *        name: eventId
+ *        required: true
  *      - in: body
  *        name: body
+ *        required: true
  *        schema:
  *          type: number
  *      responses:
@@ -148,13 +171,18 @@ eventRouter.get('/event/:eventId', (req, res)=>{
  *              description: ok
  *
  */
-eventRouter.put('/event/:eventId', (req,res)=>{
-    eventController.updateEvent(req).then(response => {
-        res.send(response);
-    }).catch(()=>{
-        res.status(404);
-        res.send('no event to update');
-    });
+eventRouter.put('/event/:eventId',validateToken, (req,res)=>{
+    if(req.decoded.admin){
+        eventController.updateEvent(req).then(response => {
+            res.send(response);
+        }).catch(()=>{
+            res.status(404);
+            res.send('no event to update');
+        });
+    }else{
+        res.status(401);
+        res.send('You are not authorized as admin');
+    }
 });
 
 
@@ -167,8 +195,12 @@ eventRouter.put('/event/:eventId', (req,res)=>{
  *      summary: delete one event
  *      description: delete event
  *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        required: true
  *      - in: path
  *        name: eventId
+ *        required: true
  *        schema:
  *          type: number
  *      responses:
@@ -176,16 +208,18 @@ eventRouter.put('/event/:eventId', (req,res)=>{
  *              description: ok
  */
 eventRouter.delete('/event/:eventId/', (req, res)=>{
-
-    eventController.deleteEvent(req).then(response => {
-        res.send(response)
-    }).catch(()=>{
-        res.status(404);
-        res.send('cannot delete event');
-    });
+    if(req.decoded.admin){
+        eventController.deleteEvent(req).then(response => {
+            res.send(response)
+        }).catch(()=>{
+            res.status(404);
+            res.send('cannot delete event');
+        });
+    }else{
+        res.status(401);
+        res.send('You are not authorized as admin');
+    }
 
 });
-
-
 
 export default eventRouter;

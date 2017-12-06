@@ -1,4 +1,5 @@
-import eventModel from '../modals/event.model'
+import eventModel from '../modals/event.model';
+
 class EventController{
 
     constructor(){

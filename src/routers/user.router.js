@@ -26,9 +26,6 @@ import  {validateToken}  from './middleware';
 
 let userRouter = express.Router();
 
-// userRouter.use((req, res, next)=>{
-//     validateToken(req, res, next);
-// });
 /**
  * @swagger
  * /users/user:
