@@ -36,7 +36,8 @@ class BookEvent_Controller{
 
     //delete all bookings of an event
     deleteAllBookingsOfAnEvent(req){
-        return this.userEvent_model.destroy({where:{'eventId':req}});
+        return this.userEvent_model.destroy({where:{'eventId':req}})
+        //retuns smthg success or google more
     }
 
 

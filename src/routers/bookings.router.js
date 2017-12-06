@@ -68,7 +68,7 @@ bookingRouter.post('/:eventId/:userId',validateToken, (req,res)=>{
  * /bookings/events/{userId}:
  *  get:
  *      tags:
- *      - booking
+ *      - booking admin
  *      summary: get all booked/purchased events by user
  *      description: get all events of a particular user -- accessible to both normal user and admin
  *      parameters:
@@ -90,6 +90,8 @@ bookingRouter.get('/events/:userId/',validateToken, (req,res)=>{
     }).catch(()=>{
         res.status(404);
         res.send('no event to update');
+        //if user doesn't exist or anything else then always return 404
+        //instead of no event to update: {status:"no object found"} --> angular
     });
 });
 

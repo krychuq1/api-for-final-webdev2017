@@ -165,7 +165,7 @@ eventRouter.get('/event/:eventId',validateToken, (req, res)=>{
  *        name: body
  *        required: true
  *        schema:
- *          type: number
+ *          $ref: '#/definitions/Event'
  *      responses:
  *          200:
  *              description: ok
