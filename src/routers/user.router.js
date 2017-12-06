@@ -123,10 +123,10 @@ userRouter.get('/checkEmail/:email', (req, res) => {
    userController.checkEmail(req.params.email).then(response => {
        if(response){
            res.status(200);
-           res.send("SUCCESS");
+           res.json({status: 'success'});
        }else{
            res.status(404);
-           res.send('not found')
+           res.send({status: 'fail'})
        }
    })
 });

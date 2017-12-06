@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import Swagger from './services/swagger.service';
-
+import cors from  'cors';
 
 import {SwaggerRoute, userRouter, eventRouter} from './routers/index.routing';
 
@@ -9,6 +9,7 @@ let app = express();
 const port = process.env.PORT || 7777;
 let swagger = new Swagger();
 
+app.use(cors());
 app.disable('etag');
 
 app.use(bodyParser.json() );       // to support JSON-encoded bodies
