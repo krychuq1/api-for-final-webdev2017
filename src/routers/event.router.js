@@ -1,7 +1,8 @@
 import express from 'express';
 import eventController from "../controllers/events.controller";
 import  {validateToken}  from './middleware';
-
+import fs from 'fs';
+import randomString from 'randomstring';
 /**
  * @swagger
  * definitions:
@@ -115,6 +116,33 @@ eventRouter.get('/event',validateToken, (req,res)=>{
     //res.send('ok');
 });
 
+/**
+ * @swagger
+ * /events/image:
+ *  post:
+ *      tags:
+ *      - event
+ *      summary: save image
+ *      description: save image
+ *      parameters:
+ *      - in: body
+ *        name: file
+ *        description: file to save.
+ *        schema:
+ *        type: object
+ *      responses:
+ *          201:
+ *              description: ok
+ */
+eventRouter.post('/image', (req, res) => {
+    let base64Data = req.body.src.replace(/^data:image\/png;base64,/, "");
+    const file = './assets/images/event/'+ randomString.generate() + '.png';
+    fs.writeFile(file, base64Data, 'base64', function(err) {
+        console.log(err, '<----err');
+    });
+
+    res.send({ok: 'ok'})
+});
 /**
  * @swagger
  * /events/event/{eventId}:

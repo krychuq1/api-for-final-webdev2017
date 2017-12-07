@@ -11,11 +11,12 @@ let swagger = new Swagger();
 
 app.use(cors());
 app.disable('etag');
-
 app.use(bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
+app.use('/images', express.static('assets/images/event'));
+
 
 app.use('/users', userRouter);
 app.use('/events', eventRouter);
