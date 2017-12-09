@@ -18,6 +18,7 @@ import  {validateToken}  from './middleware';
  *      - end_time
  *      - image
  *      - description
+ *      - category
  *      - organizer_name
  *      - number_of_places
  *      properties:
@@ -40,6 +41,8 @@ import  {validateToken}  from './middleware';
  *          image:
  *              type: string
  *          description:
+ *              type: string
+ *          category:
  *              type: string
  *          organizer_name:
  *              type: string
@@ -112,7 +115,6 @@ eventRouter.get('/event',validateToken, (req,res)=>{
         res.status(404);
         res.send('not found')
     })
-    //res.send('ok');
 });
 
 /**
@@ -139,6 +141,37 @@ eventRouter.get('/event',validateToken, (req,res)=>{
  */
 eventRouter.get('/event/:eventId',validateToken, (req, res)=>{
     eventController.getEvent(req).then((event)=>{
+        res.send(event);
+    }).catch(()=>{
+        res.status(404);
+        res.send('not found')
+    });
+});
+
+/**
+ * @swagger
+ * /events/event/{category}:
+ *  get:
+ *      tags:
+ *      - event
+ *      summary: get all events of same category
+ *      description: get all events based on category
+ *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        required: true
+ *      - in: path
+ *        name: category
+ *        required: true
+ *        schema:
+ *          type: string
+ *      responses:
+ *          200:
+ *              description: ok
+ *
+ */
+eventRouter.get('/event/:category',validateToken, (req, res)=>{
+    eventController.getAllEventsByCategory(req.params.category).then((event)=>{
         res.send(event);
     }).catch(()=>{
         res.status(404);

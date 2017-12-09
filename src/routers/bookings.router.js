@@ -101,7 +101,7 @@ bookingRouter.get('/events/:userId/',validateToken, (req,res)=>{
  * /bookings/users/{eventId}:
  *  get:
  *      tags:
- *      - booking
+ *      - booking admin
  *      summary: get all users by eventId
  *      description: get all users that booked a particular event --> accessible only for admin
  *      parameters:
@@ -137,7 +137,7 @@ bookingRouter.get('/users/:eventId',validateToken, (req,res)=>{
  * /bookings/{bookingId}:
  *  put:
  *      tags:
- *      - booking
+ *      - booking admin
  *      summary: edit a particular booking
  *      description: As admin, edit/update the transaction status of a particular booking
  *      parameters:
@@ -177,7 +177,7 @@ bookingRouter.put('/:bookingId',validateToken, (req,res)=>{
  * /bookings/booking/{eventId}:
  *  delete:
  *      tags:
- *      - booking
+ *      - booking admin
  *      summary: delete all bookings
  *      description: As admin, delete all bookings based on event id
  *      parameters:

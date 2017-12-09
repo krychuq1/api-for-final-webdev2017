@@ -26,14 +26,23 @@ class EventModel{
             start_date: {
                 type: Sequalize.DATE,
             },
+            start_time: {
+                type: Sequalize.DataTypes.TIME
+            },
             end_date: {
                 type: Sequalize.DATE,
+            },
+            end_time: {
+                type: Sequalize.DataTypes.TIME,
             },
             image: {
                 type: Sequalize.STRING,
             },
             description: {
                 type: Sequalize.TEXT
+            },
+            category: {
+                type: Sequalize.STRING,
             },
             organizer_name: {
                 type: Sequalize.STRING

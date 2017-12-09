@@ -22,6 +22,9 @@ class EventController{
     getAll(){
         return this.eventModel.all();
     }
+    getAllEventsByCategory(req){
+        return this.eventModel.all({where:{'category': req.params.category}});
+    }
 
     updateEvent(obj){
         return this.eventModel.findById(obj.params.eventId).then(event => {
@@ -31,9 +34,12 @@ class EventController{
                 city:obj.body.city,
                 online_event:obj.body.online_event,
                 start_date:obj.body.start_date,
+                start_time:obj.body.start_time,
                 end_date:obj.body.end_date,
+                end_time:obj.body.end_time,
                 image:obj.body.image,
                 description:obj.body.description,
+                category:obj.body.category,
                 organizer_name:obj.body.organizer_name,
                 number_of_places:obj.body.number_of_places
             }).then(() => {});
