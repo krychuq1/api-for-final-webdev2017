@@ -130,7 +130,7 @@ userRouter.get('/checkEmail/:email', (req, res) => {
 
 /**
  * @swagger
- * /users/user/{userId}:
+ * /users/getById/{userId}:
  *  get:
  *      tags:
  *      - user admin
@@ -151,7 +151,7 @@ userRouter.get('/checkEmail/:email', (req, res) => {
  *
  */
 
-userRouter.get('/user/:userId',validateToken, (req, res)=>{
+userRouter.get('/getById/:userId',validateToken, (req, res)=>{
     userController.getUserById(req.params.userId).then((user)=>{
         res.send(user);
     }).catch(()=>{
