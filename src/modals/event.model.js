@@ -50,6 +50,7 @@ class EventModel{
             number_of_places: {
                 type: Sequalize.DataTypes.INTEGER
             }
+
         },{
             //don't require timestamp: createdAt and updatedAt FROM events AS event
             timestamps: false
