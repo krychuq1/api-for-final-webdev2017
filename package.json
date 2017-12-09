@@ -29,7 +29,8 @@
     "mongodb": "^2.2.33",
     "mongoose": "^4.13.6",
     "mysql2": "^1.5.1",
-    "sequelize": "^4.26.0",
+    "randomstring": "^1.1.5",
+    "sequelize": "^4.27.0",
     "swagger-jsdoc": "^1.9.7",
     "swagger-ui-express": "^2.0.11"
   },

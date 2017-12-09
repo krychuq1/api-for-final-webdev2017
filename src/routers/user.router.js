@@ -147,9 +147,27 @@ userRouter.get('/checkEmail/:email', (req, res) => {
  *
  */
 userRouter.post('/user', (req, res)=>{
+    const userObject = {
+        email: req.body.email,
+        password: req.body.password
+    };
     userController.addUser(req.body).then((response)=>{
-        res.status(201);
-        res.send(response);
+        userController.authenticate(userObject).then(user => {
+            console.log('this is user after auth');
+            const payload = {
+                admin: user.isAdmin,
+                email: user.email
+            };
+            let token = jwt.sign(payload, 'superDuperSecretKey',  { expiresIn: '1h' });
+            res.json({
+                token : token
+            });
+        }).catch((err)=>{
+            console.log(err, ' HERE HERE');
+            res.status(404);
+            res.send('not found')
+        });
+
     }).catch((err)=>{
         res.status(409);
         res.send(err);

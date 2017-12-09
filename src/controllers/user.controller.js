@@ -23,11 +23,14 @@ class UserController{
         });
     }
     authenticate(user){
+        console.log('we are going to auth', user.password);
         return new Promise((resolve, reject)=>{
             this.findOne(user.email).then((userDb)=>{
+                console.log('user was found', userDb);
                 if(userDb){
                     this.comparePassword(user.password, userDb.password).then((res, err)=>{
-                        console.log(err);
+                        console.log(user.password, userDb.password);
+                        console.log(err, "<err", res, " <- res");
                         if(res){
                             resolve(userDb);
                         }else {
@@ -35,6 +38,8 @@ class UserController{
                         }
                     });
                 }else{
+                    console.log('user was not found');
+
                     reject();
                 }
             })
