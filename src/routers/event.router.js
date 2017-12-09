@@ -137,13 +137,14 @@ eventRouter.get('/event',validateToken, (req,res)=>{
  *              description: ok
  */
 eventRouter.post('/image', (req, res) => {
+    const image = randomString.generate() + '.png';
     let base64Data = req.body.src.replace(/^data:image\/png;base64,/, "");
-    const file = './assets/images/event/'+ randomString.generate() + '.png';
+    const file = './assets/images/event/'+ image;
     fs.writeFile(file, base64Data, 'base64', function(err) {
         console.log(err, '<----err');
     });
 
-    res.send({ok: 'ok'})
+    res.send({imgUrl: image})
 });
 /**
  * @swagger
@@ -268,7 +269,7 @@ eventRouter.put('/event/:eventId',validateToken, (req,res)=>{
  *          200:
  *              description: ok
  */
-eventRouter.delete('/event/:eventId/', (req, res)=>{
+eventRouter.delete('/event/:eventId/', validateToken, (req, res)=>{
     if(req.decoded.admin){
         eventController.deleteEvent(req).then(response => {
             res.send(response)
