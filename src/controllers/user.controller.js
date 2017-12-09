@@ -22,6 +22,17 @@ class UserController{
             })
         });
     }
+    getUserById(user){
+        return new Promise((resolve, reject)=>{
+            this.userModel.findById(user).then((userDb)=>{
+                if(userDb){
+                    resolve(userDb);
+                }else{
+                    reject();
+                }
+            })
+        });
+    }
     authenticate(user){
         console.log('we are going to auth', user.password);
         return new Promise((resolve, reject)=>{

@@ -130,6 +130,38 @@ userRouter.get('/checkEmail/:email', (req, res) => {
 
 /**
  * @swagger
+ * /users/user/{userId}:
+ *  get:
+ *      tags:
+ *      - user admin
+ *      summary: get one user by id
+ *      description: as admin, get one user from db based on userId
+ *      parameters:
+ *      - in: header
+ *        name: x-access-token
+ *        required: true
+ *      - in: path
+ *        name: userId
+ *        required: true
+ *        schema:
+ *          type: number
+ *      responses:
+ *          200:
+ *              description: ok
+ *
+ */
+
+userRouter.get('/user/:userId',validateToken, (req, res)=>{
+    userController.getUserById(req.params.userId).then((user)=>{
+        res.send(user);
+    }).catch(()=>{
+        res.status(404);
+        res.send('not found')
+    });
+});
+
+/**
+ * @swagger
  * /users/user:
  *  post:
  *      tags:
