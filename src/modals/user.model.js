@@ -17,6 +17,9 @@ class UserModel{
             lastName: {
                 type: Sequalize.STRING
             },
+            gender: {
+                type: Sequalize.STRING
+            },
             password: {
                 type: Sequalize.STRING
             },

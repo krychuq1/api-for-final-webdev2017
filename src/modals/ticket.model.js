@@ -15,6 +15,9 @@ class TicketModel{
             eventId: {
                 type: Sequalize.INTEGER,
             },
+            userId: {
+                type: Sequalize.INTEGER
+            },
             type: {
                 type: Sequalize.STRING,
             },

@@ -10,6 +10,7 @@ import {validateToken} from "./middleware";
  *      type: object
  *      required:
  *      - eventId
+ *      - userId
  *      - type
  *      - price
  *      - currency
@@ -22,6 +23,8 @@ import {validateToken} from "./middleware";
  *              type: string
  *          currency:
  *              type: string
+ *          userId:
+ *              type: number
  *
  */
 
