@@ -120,6 +120,28 @@ eventRouter.get('/event',validateToken, (req,res)=>{
 
 /**
  * @swagger
+ * /events/event/all:
+ *  get:
+ *      tags:
+ *      - event all access
+ *      summary: get all events for all privileges
+ *      description: get all existing events, no questions asked ;)
+ *      responses:
+ *          201:
+ *              description: ok
+ */
+eventRouter.get('/event/all', (req,res)=>{
+    eventController.getAll().then((event)=>{
+        res.send(event);
+    }).catch(()=>{
+        res.status(404);
+        res.send('not found')
+    })
+});
+
+
+/**
+ * @swagger
  * /events/image:
  *  post:
  *      tags:
