@@ -20,7 +20,15 @@ class EventController{
     }
 
     getAll(){
-        return this.eventModel.all();
+        return new Promise((resolve, reject)=>{
+            this.eventModel.all().then((res)=>{
+                if(res){
+                    resolve(res);
+                }else{
+                    reject();
+                }
+            })
+        });
     }
     getAllEventsByCategory(req){
         return this.eventModel.all({where:{'category': req.params.category}});
