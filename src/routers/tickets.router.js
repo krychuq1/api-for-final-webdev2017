@@ -104,7 +104,7 @@ ticketRouter.get('/:eventId', validateToken, (req,res)=>{
  *              description: ok
  */
 ticketRouter.post('', validateToken, (req,res) => {
-    console.log('we are here')
+    console.log('we are here');
     ticketController.addTicket(req.body).then(status => {
             res.send(status);
         }
