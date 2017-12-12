@@ -17,6 +17,8 @@ import  {validateToken}  from './middleware';
  *              type: string
  *          password:
  *              type: string
+ *          gender:
+ *              type: string
  *          email:
  *              type: string
  *          isAdmin:
