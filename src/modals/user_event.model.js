@@ -1,9 +1,12 @@
 import db from '../database/databaseConnection';
 import Sequalize from 'sequelize';
+import userModel from "./user.model";
 
 class UserEventModel{
 
     constructor(){
+        this.userModel = userModel.getModel();
+
         this.sequalize = db.getSequalize();
         this.defineModel();
         this.userEvent_model.findAll();
@@ -17,13 +20,14 @@ class UserEventModel{
             eventId: {
                 type: Sequalize.DataTypes.INTEGER,
             },
-            transactionStatus: {
-                type: Sequalize.STRING,
+            transactionStatusId: {
+                type: Sequalize.DataTypes.INTEGER,
             }
         },{
             //don't require timestamp: createdAt and updatedAt FROM events AS event
             timestamps: false
         });
+        this.userEvent_model.belongsTo(this.userModel, {foreignKey: 'userId'})
     }
     getModel(){
         return this.userEvent_model;

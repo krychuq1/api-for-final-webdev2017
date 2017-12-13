@@ -1,6 +1,7 @@
 import express from 'express';
 import bookingController from "../controllers/booking.controller";
 import  {validateToken}  from './middleware';
+import _ from 'lodash';
 /**
  * @swagger
  * definitions:
@@ -16,8 +17,8 @@ import  {validateToken}  from './middleware';
  *              type: integer
  *          eventId:
  *              type: integer
- *          transactionStatus:
- *              type: string
+ *          transactionStatusId:
+ *              type: number
  *  BookingStatusUpdate:
  *      type: object
  *      required:
@@ -27,6 +28,7 @@ import  {validateToken}  from './middleware';
  *              type: string
  *
  */
+
 
 let bookingRouter = express.Router();
 
@@ -54,6 +56,8 @@ let bookingRouter = express.Router();
  *
  */
 
+
+
 bookingRouter.post('/:eventId/:userId',validateToken, (req,res)=>{
     bookingController.bookEvent(req.body).then(response => {
         res.send(response);
@@ -62,6 +66,25 @@ bookingRouter.post('/:eventId/:userId',validateToken, (req,res)=>{
         res.send('no event to update');
     });
 });
+
+/**
+ * @swagger
+ * /bookings/events:
+ *  get:
+ *      tags:
+ *      - booking
+ *      summary: get all of bookings
+ *      description: get all of bookings
+ *      responses:
+ *          201:
+ *              description: ok
+ */
+bookingRouter.get('/events', (req, res) => {
+    bookingController.getAll().then((bookEvent) => {
+        let grouppedArray = _.groupBy(bookEvent, 'eventId');
+        res.send(grouppedArray)
+    })
+})
 
 /**
  * @swagger
@@ -121,7 +144,9 @@ bookingRouter.get('/events/:userId/',validateToken, (req,res)=>{
 bookingRouter.get('/users/:eventId',validateToken, (req,res)=>{
     if(req.decoded.admin) {
         bookingController.getAllBookingsByEventId(req.params.eventId).then(response => {
-            res.send(response);
+            let groupEvent = _.groupBy(response, 'transactionStatusId');
+            res.send(groupEvent);
+
         }).catch(() => {
             res.status(404);
             res.send('no event to update');

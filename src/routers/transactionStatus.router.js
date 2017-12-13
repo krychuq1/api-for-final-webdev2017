@@ -45,7 +45,7 @@ transactionStatusRouter.get('', (req, res) => {
  *  post:
  *      tags:
  *      - transaction
- *      summary: add transaction
+ *      summary: add transactions
  *      description: add transaction
  *      parameters:
  *      - in: body
