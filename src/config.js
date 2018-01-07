@@ -1,9 +1,9 @@
 let swaggerConfig = {
     swaggerDefinition: {
         info: {
-            title: 'Translation Json',
+            title: 'EventHub',
             version: '1.0.0',
-            description: 'Node service which provides content for White Labels'
+            description: 'This is API for school project mysql'
         },
         basePath: '/',
         host: '',
