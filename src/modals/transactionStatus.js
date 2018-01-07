@@ -11,7 +11,7 @@ class TransactionStatusModel{
     }
     defineModel(){
         //define user model
-        this.transactionStatusModel = this.sequalize.define('transactionStatus', {
+        this.transactionStatusModel = this.sequalize.define('transactionstatus', {
             status: {
                 type: Sequalize.STRING,
             },
