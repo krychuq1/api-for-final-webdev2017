@@ -7,7 +7,7 @@ let swaggerConfig = {
         },
         basePath: '/',
         host: '',
-        schemes: ['http'],
+        schemes: ['https'],
         produces: ['application/json'],
         consumes: ['application/json'],
     },
