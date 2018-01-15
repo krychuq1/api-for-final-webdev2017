@@ -2,8 +2,8 @@ import sequelize from 'sequelize';
 
 class DbConnection{
     constructor(){
-        this.sequelize = new sequelize('keafinal', 'root', 'root', {
-            host: 'localhost',
+        this.sequelize = new sequelize('keafinal', 'krystian', 'krystian', {
+            host: '173.194.224.186',
             dialect: 'mysql',
             pool: {
                 max: 5,
