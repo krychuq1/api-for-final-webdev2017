@@ -18,8 +18,10 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 // app.use(bodyParser({limit: '50mb'}));       // to support JSON-encoded bodies
 
-app.use('/images', express.static('assets/images/event'));
-
+//dev
+// app.use('/images', express.static('assets/images/event'));
+//prod
+app.use('/images', express.static('dist/assets/images/event'));
 
 app.use('/users', userRouter);
 app.use('/events', eventRouter);
