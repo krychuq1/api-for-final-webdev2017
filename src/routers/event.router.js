@@ -161,7 +161,7 @@ eventRouter.get('/event/all', (req,res)=>{
 eventRouter.post('/image', (req, res) => {
     const image = randomString.generate() + '.png';
     let base64Data = req.body.src.replace(/^data:image\/png;base64,/, "");
-    const file = './assets/images/event/'+ image;
+    const file = './dist/assets/images/event/'+ image;
     fs.writeFile(file, base64Data, 'base64', function(err) {
         console.log(err, '<----err');
     });
