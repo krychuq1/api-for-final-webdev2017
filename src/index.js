@@ -3,7 +3,8 @@ import bodyParser from 'body-parser';
 import Swagger from './services/swagger.service';
 import cors from  'cors';
 
-import {SwaggerRoute, userRouter, eventRouter, bookingRouter, ticketRouter, transactionRouter} from './routers/index.routing';
+import {SwaggerRoute, userRouter, eventRouter, bookingRouter, ticketRouter,
+    transactionRouter, imageRouter} from './routers/index.routing';
 
 let app = express();
 const port = process.env.PORT || 7777;
@@ -22,7 +23,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 // app.use('/images', express.static('assets/images/event'));
 //prod
 app.use('/images', express.static('dist/assets/images/event'));
-
+app.use('/img', imageRouter);
 app.use('/users', userRouter);
 app.use('/events', eventRouter);
 app.use('/bookings', bookingRouter);
